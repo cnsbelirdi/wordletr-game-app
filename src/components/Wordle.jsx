@@ -8,7 +8,7 @@ import { WordContext } from "../providers/WordProvider";
 const Wordle = () => {
   const { currentWord } = useContext(WordContext);
   const [guesses, setGuesses] = useState([]);
-  const [currentGuess, setCurrentGuess] = useState(""); // Örnek kelime
+  const [currentGuess, setCurrentGuess] = useState("");
   const [keyStatus, setKeyStatus] = useState({});
   const [gameOver, setGameOver] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -118,6 +118,7 @@ const Wordle = () => {
             JSON.stringify([...guesses, currentGuess])
           );
           localStorage.setItem("wordleGameOver", JSON.stringify(true));
+          localStorage.setItem("wordleGameResult", "WIN");
           return;
         }
 
@@ -126,6 +127,14 @@ const Wordle = () => {
           "wordleGuesses",
           JSON.stringify([...guesses, currentGuess])
         );
+
+        // 6 tahmin yapıldığında oyunu bitir ve modalı aç
+        if (guesses.length === 5) {
+          setGameOver(true);
+          setModalOpen(true);
+          localStorage.setItem("wordleGameOver", JSON.stringify(true));
+          localStorage.setItem("wordleGameResult", JSON.stringify("LOSE"));
+        }
       }
     } else if (key === "BACKSPACE") {
       setCurrentGuess(currentGuess.slice(0, -1));
@@ -137,19 +146,12 @@ const Wordle = () => {
   const getGuessStatus = (guess) => {
     const result = Array(5).fill("absent");
     const currentWordArray = currentWord.split("");
-    const guessArray = guess.split("");
 
-    // Correct positions first
-    guessArray.forEach((letter, index) => {
+    guess.split("").forEach((letter, index) => {
       if (letter === currentWordArray[index]) {
         result[index] = "correct";
         currentWordArray[index] = null; // Mark this letter as used
-      }
-    });
-
-    // Present letters
-    guessArray.forEach((letter, index) => {
-      if (result[index] !== "correct" && currentWordArray.includes(letter)) {
+      } else if (currentWordArray.includes(letter)) {
         result[index] = "present";
         currentWordArray[currentWordArray.indexOf(letter)] = null; // Mark this letter as used
       }
@@ -186,6 +188,7 @@ const Wordle = () => {
     setModalOpen(false);
     localStorage.removeItem("wordleGuesses");
     localStorage.removeItem("wordleGameOver");
+    localStorage.removeItem("wordleGameResult");
   };
 
   const handleModalClose = () => {

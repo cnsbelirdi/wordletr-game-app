@@ -25,13 +25,14 @@ const Board = ({ guesses, currentGuess, getGuessStatus }) => {
           ))}
         </div>
       )}
-      {[...Array(6 - guesses.length - 1)].map((_, i) => (
-        <div key={i + guesses.length} className="row">
-          {[...Array(5)].map((_, j) => (
-            <div key={j} className="cell"></div>
-          ))}
-        </div>
-      ))}
+      {guesses.length < 6 &&
+        [...Array(6 - guesses.length - 1)].map((_, i) => (
+          <div key={i + guesses.length} className="row">
+            {[...Array(5)].map((_, j) => (
+              <div key={j} className="cell"></div>
+            ))}
+          </div>
+        ))}
     </div>
   );
 };

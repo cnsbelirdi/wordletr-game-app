@@ -1,4 +1,8 @@
+import { useContext } from "react";
+import { WordContext } from "../providers/WordProvider";
+
 const Modal = ({ onClose, timeLeft }) => {
+  const { currentWord } = useContext(WordContext);
   // Zamanı HH:MM:SS formatında gösterme fonksiyonu
   const formatTime = (time) => {
     const hours = String(time.hours).padStart(2, "0");
@@ -7,11 +11,19 @@ const Modal = ({ onClose, timeLeft }) => {
     return `${hours}:${minutes}:${seconds}`;
   };
 
+  const result = localStorage.getItem("wordleGameResult");
+
   return (
     <div className="modal">
       <div className="modal-content">
         <h2>Oyun Bitti!</h2>
-        <p>Doğru kelimeyi buldunuz.</p>
+        <p>
+          {result === "WIN"
+            ? "Doğru kelimeyi tahmin ettiniz."
+            : "Kelimeyi tahmin edemediniz."}
+          <br />
+          <br /> Kelime: <b>{currentWord}</b>
+        </p>
         <p>Kalan süre: {formatTime(timeLeft)}</p>
         <button onClick={onClose}>Kapat</button>
       </div>
