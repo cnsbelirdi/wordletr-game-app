@@ -1,5 +1,7 @@
+import { useState } from "react";
+
 const Keyboard = ({ onKeyPress, keyStatus }) => {
-  const keys = "ERTYUIOPĞÜASDFGHJKLŞİZCVBNMÖÇ".split("");
+  const [keys, setKeys] = useState("ERTYUIOPĞÜASDFGHJKLŞİZCVBNMÖÇ".split(""));
   return (
     <div className="keyboard">
       {keys.map((key) => (

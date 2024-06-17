@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Board from "./Board";
 import Keyboard from "./Keyboard";
 import Modal from "./Modal";
+import { useContext } from "react";
+import { WordContext } from "../providers/WordProvider";
 
 const Wordle = () => {
+  const { currentWord } = useContext(WordContext);
   const [guesses, setGuesses] = useState([]);
-  const [currentGuess, setCurrentGuess] = useState("");
-  const [solution, setSolution] = useState("REACT"); // Örnek kelime
+  const [currentGuess, setCurrentGuess] = useState(""); // Örnek kelime
   const [keyStatus, setKeyStatus] = useState({});
   const [gameOver, setGameOver] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,7 +40,17 @@ const Wordle = () => {
 
     // Zamanlayıcıyı her 1 saniyede bir güncelle
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      const timeLeft = calculateTimeLeft();
+      setTimeLeft(timeLeft);
+
+      // Saat 00:00 olduğunda oyunu sıfırla
+      if (
+        timeLeft.hours === 0 &&
+        timeLeft.minutes === 0 &&
+        timeLeft.seconds === 0
+      ) {
+        resetGame();
+      }
     }, 1000);
 
     // İlk hesaplama için zamanlayıcıyı çalıştır
@@ -96,7 +108,7 @@ const Wordle = () => {
         setCurrentGuess("");
 
         // Doğru kelimeyi bulduysa oyunu bitir
-        if (currentGuess === solution) {
+        if (currentGuess === currentWord) {
           setGameOver(true);
           setModalOpen(true);
 
@@ -124,22 +136,22 @@ const Wordle = () => {
 
   const getGuessStatus = (guess) => {
     const result = Array(5).fill("absent");
-    const solutionArray = solution.split("");
+    const currentWordArray = currentWord.split("");
     const guessArray = guess.split("");
 
     // Correct positions first
     guessArray.forEach((letter, index) => {
-      if (letter === solutionArray[index]) {
+      if (letter === currentWordArray[index]) {
         result[index] = "correct";
-        solutionArray[index] = null; // Mark this letter as used
+        currentWordArray[index] = null; // Mark this letter as used
       }
     });
 
     // Present letters
     guessArray.forEach((letter, index) => {
-      if (result[index] !== "correct" && solutionArray.includes(letter)) {
+      if (result[index] !== "correct" && currentWordArray.includes(letter)) {
         result[index] = "present";
-        solutionArray[solutionArray.indexOf(letter)] = null; // Mark this letter as used
+        currentWordArray[currentWordArray.indexOf(letter)] = null; // Mark this letter as used
       }
     });
 
@@ -164,6 +176,16 @@ const Wordle = () => {
     });
 
     return newStatus;
+  };
+
+  const resetGame = () => {
+    setGuesses([]);
+    setCurrentGuess("");
+    setKeyStatus({});
+    setGameOver(false);
+    setModalOpen(false);
+    localStorage.removeItem("wordleGuesses");
+    localStorage.removeItem("wordleGameOver");
   };
 
   const handleModalClose = () => {

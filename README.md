@@ -1,20 +1,19 @@
 # Wordle Oyunu
 
-Bu proje, kullanıcıların belirli bir kelimeyi tahmin etmeye çalıştığı basit bir oyun olan Wordle'ı React ve JavaScript ile oluşturur. Oyun sırasında kullanıcı doğru harfleri ve pozisyonlarını tahmin etmeye çalışır ve her tahmin sonrasında geri bildirim alır.
+Wordle Oyunu, popüler Wordle oyunundan esinlenerek oluşturulmuş basit bir React uygulamasıdır. Oyunun amacı, belirli bir kelimeyi tahmin etmektir. Her tahminde doğru harflerin doğru konumunu (yeşil), doğru harflerin yanlış konumunu (sarı) ve yanlış harfleri (gri) gösteren geri bildirim sağlanır. Oyun, tahmin edilen kelimenin tamamen doğru tahmin edilmesiyle veya belirli tahmin hakkı sayısının tamamlanmasıyla sona erer.
 
 ## Özellikler
 
-- Klavye aracılığıyla harf girişi yapılabilir.
-- Tahmin edilen kelime doğruluğuna göre harfler arka plan renkleriyle işaretlenir.
-- Oyun bitiminde modal penceresi açılır ve kalan süre gösterilir.
-- Oyun sonrasında yeni bir kelimeye geçiş için belirlenen süre beklenir.
-- Oyun durumu ve tahminler localStorage'da saklanır, böylece sayfa yenilendiğinde devam edebilir.
+- **Tahmin Girişi:** Ekran klavyesi veya fiziksel klavye kullanılarak 5 harfli bir kelime tahmin edilir.
+- **Geri Bildirim:** Her harf için doğruluğuna göre görsel geri bildirim sağlanır.
+- **Modal Penceresi:** Oyun sona erdiğinde kazanma veya kaybetme durumunu gösteren modal penceresi açılır.
+- **Zaman Sınırlaması:** Oyun, her gün gece yarısında (00:00) sıfırlanır ve yeni bir kelime tahmin edilmesi gerekebilir.
 
 ## Kullanılan Teknolojiler
 
-- React.js
-- JavaScript
-- HTML/CSS
+- **React:** Kullanıcı arayüzü oluşturmak için kullanılan JavaScript kütüphanesi.
+- **LocalStorage:** Oyun ilerlemesini ve güncel tahmin edilecek kelimeyi saklamak için tarayıcı tabanlı depolama kullanılır.
+- **CSS:** Oyun arayüzünü stil ve animasyonlarla zenginleştirmek için kullanılan teknoloji.
 
 ## Kurulum
 
@@ -40,14 +39,20 @@ Bu proje, kullanıcıların belirli bir kelimeyi tahmin etmeye çalıştığı b
 4. **Tarayıcıda Görüntüleyin:**
    Tarayıcınızda `http://localhost:3000` adresine giderek oyunu görebilirsiniz.
 
-## Nasıl Oynanır?
+## Nasıl Oynanır
 
-1. Sayfa yüklendiğinde, oyunun başlamasını bekleyin.
-2. Ekran klavyesi veya bilgisayar klavyesi aracılığıyla harf girişi yapın.
-3. Her harf girdiğinizde, tahmininiz doğruluğuna göre harfler işaretlenir.
-4. Doğru kelimeyi bulduğunuzda, oyun biter ve modal penceresi açılır.
-5. Modal penceresinde kalan süre gösterilir ve yeni kelimeye geçiş için beklenir.
-6. Yeni kelimeye geçildiğinde, tahmin girişi yeniden başlar.
+1. **Kelime Tahmini:**
+   - Ekran klavyesi veya fiziksel klavye kullanarak 5 harfli bir kelime tahmin edin.
+   - Her harf için doğruluğuna göre geri bildirim alırsınız:
+     - Yeşil: Doğru harf, doğru konumda.
+     - Sarı: Doğru harf, yanlış konumda.
+     - Gri: Yanlış harf.
+2. **Kazanma ve Kaybetme:**
+
+   - Kelimeyi doğru tahmin ettiğinizde (tüm harfler yeşil) veya tahmin hakkınız bittiğinde oyun sona erer.
+
+3. **Oyunun Sıfırlanması:**
+   - Oyun her gün gece yarısında (00:00) sıfırlanır ve yeni bir kelime tahmin edilmesi gerekebilir.
 
 ## Ekran Görüntüsü
 
@@ -55,6 +60,5 @@ Bu proje, kullanıcıların belirli bir kelimeyi tahmin etmeye çalıştığı b
 
 ## Notlar
 
-- Oyunun yeni kelimeye geçiş süresi her gün 00:00'da yenilenir.
 - Proje React kullanarak oluşturulmuş olup, bazı bileşenler örnek veri veya sabit değerlerle çalışır.
 - Projenin özelleştirilmesi veya genişletilmesi gereken herhangi bir bölüm varsa, ilgili bileşenlerin kodunu inceleyebilir ve uygun şekilde güncelleyebilirsiniz.
