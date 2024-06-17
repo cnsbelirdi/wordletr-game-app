@@ -20,17 +20,22 @@ Bu proje, kullanıcıların belirli bir kelimeyi tahmin etmeye çalıştığı b
 
 1. **Projeyi İndirin veya Klonlayın:**
 
-git clone <repo-url>
-
-cd wordle-game
+```bash
+   git clone https://github.com/cnsbelirdi/wordletr-game-app.git
+   cd wordle-game
+```
 
 2. **Gerekli Bağımlılıkları Yükleyin:**
 
-npm install
+```bash
+   npm install
+```
 
 3. **Projeyi Başlatın:**
 
-npm start
+```bash
+   npm start
+```
 
 4. **Tarayıcıda Görüntüleyin:**
    Tarayıcınızda `http://localhost:3000` adresine giderek oyunu görebilirsiniz.
