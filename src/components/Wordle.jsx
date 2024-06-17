@@ -1,0 +1,190 @@
+import { useEffect, useState } from "react";
+import Board from "./Board";
+import Keyboard from "./Keyboard";
+import Modal from "./Modal";
+
+const Wordle = () => {
+  const [guesses, setGuesses] = useState([]);
+  const [currentGuess, setCurrentGuess] = useState("");
+  const [solution, setSolution] = useState("REACT"); // Örnek kelime
+  const [keyStatus, setKeyStatus] = useState({});
+  const [gameOver, setGameOver] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  // Kelimenin yenileneceği saat (00:00) - Örneğin 23:59:59
+  const resetTime = new Date();
+  resetTime.setHours(23);
+  resetTime.setMinutes(59);
+  resetTime.setSeconds(59);
+
+  useEffect(() => {
+    // Kalan süreyi hesapla
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const difference = resetTime.getTime() - now.getTime();
+
+      // Saat, dakika ve saniye cinsinden kalan süreyi hesapla
+      const hours = Math.floor(difference / (1000 * 60 * 60));
+      const minutes = Math.floor((difference / (1000 * 60)) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+
+      return { hours, minutes, seconds };
+    };
+
+    // Zamanlayıcıyı her 1 saniyede bir güncelle
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    // İlk hesaplama için zamanlayıcıyı çalıştır
+    setTimeLeft(calculateTimeLeft());
+
+    // localStorage'dan tahminleri ve oyun durumunu yükle
+    const savedGuesses =
+      JSON.parse(localStorage.getItem("wordleGuesses")) || [];
+    const savedGameOver =
+      JSON.parse(localStorage.getItem("wordleGameOver")) || false;
+
+    if (savedGuesses.length > 0) {
+      setGuesses(savedGuesses);
+
+      // Oyun bitmişse ve tahminler tamamlanmışsa modal'ı aç
+      if (savedGameOver) {
+        setGameOver(true);
+        setModalOpen(true);
+      }
+    }
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    // Klavye olaylarını dinle
+    const handleKeydown = (event) => {
+      const key = event.key.toUpperCase();
+      if (gameOver) return; // Oyun bittiyse işlem yapma
+
+      if (key === "ENTER") {
+        handleKeyPress("ENTER");
+      } else if (key === "BACKSPACE" || key === "DELETE") {
+        handleKeyPress("BACKSPACE");
+      } else if (/^[A-ZÇĞİÖŞÜ]$/.test(key)) {
+        handleKeyPress(key);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+    };
+  }, [currentGuess, guesses, gameOver]);
+
+  const handleKeyPress = (key) => {
+    if (gameOver) return; // Oyun bittiyse işlem yapma
+
+    if (key === "ENTER") {
+      if (currentGuess.length === 5) {
+        const newStatus = getKeyStatus(currentGuess);
+        setKeyStatus({ ...keyStatus, ...newStatus });
+        setGuesses([...guesses, currentGuess]);
+        setCurrentGuess("");
+
+        // Doğru kelimeyi bulduysa oyunu bitir
+        if (currentGuess === solution) {
+          setGameOver(true);
+          setModalOpen(true);
+
+          // localStorage'e tahminleri ve oyun durumunu kaydet
+          localStorage.setItem(
+            "wordleGuesses",
+            JSON.stringify([...guesses, currentGuess])
+          );
+          localStorage.setItem("wordleGameOver", JSON.stringify(true));
+          return;
+        }
+
+        // localStorage'e tahminleri kaydet
+        localStorage.setItem(
+          "wordleGuesses",
+          JSON.stringify([...guesses, currentGuess])
+        );
+      }
+    } else if (key === "BACKSPACE") {
+      setCurrentGuess(currentGuess.slice(0, -1));
+    } else if (currentGuess.length < 5 && /^[A-ZÇĞİÖŞÜ]$/.test(key)) {
+      setCurrentGuess(currentGuess + key);
+    }
+  };
+
+  const getGuessStatus = (guess) => {
+    const result = Array(5).fill("absent");
+    const solutionArray = solution.split("");
+    const guessArray = guess.split("");
+
+    // Correct positions first
+    guessArray.forEach((letter, index) => {
+      if (letter === solutionArray[index]) {
+        result[index] = "correct";
+        solutionArray[index] = null; // Mark this letter as used
+      }
+    });
+
+    // Present letters
+    guessArray.forEach((letter, index) => {
+      if (result[index] !== "correct" && solutionArray.includes(letter)) {
+        result[index] = "present";
+        solutionArray[solutionArray.indexOf(letter)] = null; // Mark this letter as used
+      }
+    });
+
+    return result;
+  };
+
+  const getKeyStatus = (guess) => {
+    const status = getGuessStatus(guess);
+    const newStatus = { ...keyStatus };
+
+    guess.split("").forEach((letter, index) => {
+      if (status[index] === "correct") {
+        newStatus[letter] = "correct";
+      } else if (
+        status[index] === "present" &&
+        newStatus[letter] !== "correct"
+      ) {
+        newStatus[letter] = "present";
+      } else if (status[index] === "absent" && !newStatus[letter]) {
+        newStatus[letter] = "absent";
+      }
+    });
+
+    return newStatus;
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  return (
+    <div className="wordle">
+      <Board
+        guesses={guesses}
+        currentGuess={currentGuess}
+        getGuessStatus={getGuessStatus}
+      />
+      <Keyboard
+        onKeyPress={handleKeyPress}
+        keyStatus={keyStatus}
+        disabled={gameOver}
+      />
+      {modalOpen && <Modal onClose={handleModalClose} timeLeft={timeLeft} />}
+    </div>
+  );
+};
+
+export default Wordle;

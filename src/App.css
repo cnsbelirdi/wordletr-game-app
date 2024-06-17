@@ -1,0 +1,135 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 5px;
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.keyboard button {
+  width: 43px;
+  height: 58px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #818384;
+  border: 0;
+  border-radius: 6px;
+  color: #fff;
+}
+
+.keyboard button.correct {
+  background-color: #538d4e;
+  color: white;
+}
+
+.keyboard button.present {
+  background-color: #b59f3b;
+  color: white;
+}
+
+.keyboard button.absent {
+  background-color: #3a3a3c;
+  color: white;
+}
+
+.enter {
+  font-size: 14px !important;
+}
+
+.keyboard .enter,
+.keyboard .backspace {
+  width: 65px;
+}
+
+.cell {
+  width: 62px;
+  height: 62px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #3a3a3c;
+  font-size: 32px;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.correct {
+  background-color: #538d4e;
+  color: white;
+  border: 0;
+}
+
+.present {
+  background-color: #b59f3b;
+  color: white;
+  border: 0;
+}
+
+.absent {
+  background-color: #3a3a3c;
+  color: white;
+  border: 0;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  color: #000;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.modal button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+}
+
+.modal button:hover {
+  background-color: #e0e0e0;
+}
