@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { WordContext } from "../providers/WordProvider";
 
 const Wordle = () => {
-  const { currentWord } = useContext(WordContext);
+  const { currentWord, restart, setRestart } = useContext(WordContext);
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState("");
   const [keyStatus, setKeyStatus] = useState({});
@@ -18,17 +18,17 @@ const Wordle = () => {
     seconds: 0,
   });
 
-  // Kelimenin yenileneceği saat (00:00) - Örneğin 23:59:59
-  const resetTime = new Date();
-  resetTime.setHours(23);
-  resetTime.setMinutes(59);
-  resetTime.setSeconds(59);
-
   useEffect(() => {
+    if (restart) {
+      resetGame();
+      setRestart(false);
+    }
     // Kalan süreyi hesapla
     const calculateTimeLeft = () => {
       const now = new Date();
-      const difference = resetTime.getTime() - now.getTime();
+      const resetTime = new Date();
+      resetTime.setHours(24, 0, 0, 0);
+      const difference = resetTime - now;
 
       // Saat, dakika ve saniye cinsinden kalan süreyi hesapla
       const hours = Math.floor(difference / (1000 * 60 * 60));
@@ -37,6 +37,9 @@ const Wordle = () => {
 
       return { hours, minutes, seconds };
     };
+
+    const timeLeft = calculateTimeLeft();
+    setTimeLeft(timeLeft);
 
     // Zamanlayıcıyı her 1 saniyede bir güncelle
     const timer = setInterval(() => {
@@ -52,9 +55,6 @@ const Wordle = () => {
         resetGame();
       }
     }, 1000);
-
-    // İlk hesaplama için zamanlayıcıyı çalıştır
-    setTimeLeft(calculateTimeLeft());
 
     // localStorage'dan tahminleri ve oyun durumunu yükle
     const savedGuesses =
@@ -73,7 +73,7 @@ const Wordle = () => {
     }
 
     return () => clearInterval(timer);
-  }, []);
+  }, [restart]);
 
   useEffect(() => {
     // Klavye olaylarını dinle
@@ -146,14 +146,19 @@ const Wordle = () => {
   const getGuessStatus = (guess) => {
     const result = Array(5).fill("absent");
     const currentWordArray = currentWord.split("");
+    const guessArray = guess.split("");
 
-    guess.split("").forEach((letter, index) => {
+    guessArray.forEach((letter, index) => {
       if (letter === currentWordArray[index]) {
         result[index] = "correct";
-        currentWordArray[index] = null; // Mark this letter as used
-      } else if (currentWordArray.includes(letter)) {
+        currentWordArray[index] = null;
+      }
+    });
+
+    guessArray.forEach((letter, index) => {
+      if (result[index] !== "correct" && currentWordArray.includes(letter)) {
         result[index] = "present";
-        currentWordArray[currentWordArray.indexOf(letter)] = null; // Mark this letter as used
+        currentWordArray[currentWordArray.indexOf(letter)] = null;
       }
     });
 
