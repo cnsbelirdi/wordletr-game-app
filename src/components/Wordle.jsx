@@ -78,7 +78,7 @@ const Wordle = () => {
   useEffect(() => {
     // Klavye olaylarını dinle
     const handleKeydown = (event) => {
-      const key = event.key.toUpperCase();
+      const key = event.key === "i" ? "İ" : event.key.toUpperCase();
       if (gameOver) return; // Oyun bittiyse işlem yapma
 
       if (key === "ENTER") {
