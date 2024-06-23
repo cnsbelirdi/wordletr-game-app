@@ -14,6 +14,7 @@ Wordle Oyunu, popüler Wordle oyunundan esinlenerek oluşturulmuş basit bir Rea
 - **React:** Kullanıcı arayüzü oluşturmak için kullanılan JavaScript kütüphanesi.
 - **LocalStorage:** Oyun ilerlemesini ve güncel tahmin edilecek kelimeyi saklamak için tarayıcı tabanlı depolama kullanılır.
 - **CSS:** Oyun arayüzünü stil ve animasyonlarla zenginleştirmek için kullanılan teknoloji.
+- **Framer Motion:** Oyun arayüzün animasyonları için kullanılan kütüphane.
 
 ## Kurulum
 
