@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { motion } from "framer-motion"; // Framer Motion ekleniyor
 import Board from "./Board";
 import Keyboard from "./Keyboard";
 import Modal from "./Modal";
-import { useContext } from "react";
 import { WordContext } from "../providers/WordProvider";
 
 const Wordle = () => {
@@ -212,7 +212,17 @@ const Wordle = () => {
         keyStatus={keyStatus}
         disabled={gameOver}
       />
-      {modalOpen && <Modal onClose={handleModalClose} timeLeft={timeLeft} />}
+      {modalOpen && (
+        <motion.div
+          className="modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, delay: 1.2 }}
+        >
+          <Modal onClose={handleModalClose} timeLeft={timeLeft} />
+        </motion.div>
+      )}
     </div>
   );
 };

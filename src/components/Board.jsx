@@ -1,3 +1,6 @@
+import React from "react";
+import { motion } from "framer-motion";
+
 const Board = ({ guesses, currentGuess, getGuessStatus }) => {
   return (
     <div className="board">
@@ -6,9 +9,15 @@ const Board = ({ guesses, currentGuess, getGuessStatus }) => {
         return (
           <div key={i} className="row">
             {guess.split("").map((letter, j) => (
-              <div key={j} className={`cell ${status[j]}`}>
+              <motion.div
+                key={j}
+                className={`cell ${status[j]}`}
+                initial={{ opacity: 0, rotateX: 270 }}
+                animate={{ opacity: 1, rotateX: 0 }}
+                transition={{ duration: 0.8, delay: j * 0.1 }}
+              >
                 {letter}
-              </div>
+              </motion.div>
             ))}
           </div>
         );
